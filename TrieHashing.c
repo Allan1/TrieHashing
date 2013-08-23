@@ -86,6 +86,13 @@ void InsertL(ABB** root);
 void InOrder(ABB* root);
 void WordPreOrder(ABB* root,top *t);
 
+//TODO Debugar
+void add_right_node(ABB** z,ABB** node){
+	(*node)->right = NULL;
+	(*node)->parent = *z;
+	(*z)->right = *node;										
+}
+
 ABB* create(char c){
 	ABB* node;
 	node=(ABB*)malloc(sizeof(ABB));
@@ -119,8 +126,28 @@ void WordPreOrder(ABB* root,top *t){
 void InsertL(ABB** root){
 	ABB *x , *par,*z, *node, *leftson;
 	int i=0; 
-	char name[MAXNAME];	
-	scanf("%s",name);	
+	char name[MAXNAME], class;
+	char c1 ='-';
+	char c2 ='-';
+	char c3 ='-';		
+	
+	scanf("%s",name);
+	scanf("%c",&class);
+	//TODO Debugar
+	switch(class){
+		case 's':
+			scanf("%c",&c1);
+			break;
+		case 'a':
+			scanf("%c",&c1);
+			break;
+		case 'p':
+			break;
+		case 'v':
+			scanf("%c %c %c",&c1,&c2,&c3);
+			break;
+	}
+		
 	strcat(name,"*");
 	par = NULL;
 	if ( (*root) == NULL ){// trie empty
@@ -165,11 +192,53 @@ void InsertL(ABB** root){
 			if((x->letter != '*') && (name[i] == '*')){
 				for(z=x;(z) && (z->letter != '*');z=z->right);//test for if already exist
 				if(!z){
-				node = create(name[i]);
-				node->right = NULL;//CHANGE ( I HAVE PARENT)
-				for(z=x->parent;(x);z=x,x=x->right);//z just for aux , doesn't change z in under
-				node->parent = z;
-				z->right = node;
+					node = create(name[i]);
+					node->right = NULL;//CHANGE ( I HAVE PARENT)
+					for(z=x->parent;(x);z=x,x=x->right);//z just for aux , doesn't change z in under
+					node->parent = z;
+					z->right = node;
+					//----------------------------
+					
+					z = node;
+					
+					node = create(c1);
+					add_right_node(&node,&z);
+					
+					ABB* node1;
+					ABB* node2;	
+					z = node;
+					if(c1 != '-'){
+						if(c2 != '-'){
+							node = create(c1);
+							add_right_node(&node,&z);
+						
+							node1 = create(c2);
+							add_right_node(&node,&node1);
+						
+							node2 = create(c3);
+							add_right_node(&node2,&node);
+						}else{								
+							node2 = create(c1);
+							add_right_node(&z,&node);
+						}
+					}else{					
+						node = create('p');
+						add_right_node(&z,&node);
+					}
+
+					node = create(name[i]);
+					node->right = NULL;//CHANGE ( I HAVE PARENT)
+					for(z=x->parent;(x);z=x,x=x->right);//z just for aux , doesn't change z in under
+					node->parent = z;
+					z->right = node;
+					
+					//----------------------------
+					
+					node = create(name[i]);
+					node->right = NULL;//CHANGE ( I HAVE PARENT)
+					for(z=x->parent;(x);z=x,x=x->right);//z just for aux , doesn't change z in under
+					node->parent = z;
+					z->right = node;
 				}
 				else
 					printf("palavra jah existente\n");	
@@ -334,7 +403,6 @@ void printAddStack(top* t,char* name){
 			printf("\n");
 		}
 }
-
 
 
 void addWordPreOrder(ABB* root,top *t,char* name){
@@ -529,6 +597,9 @@ int main(){
 			case 'd':
 				RemoveWord(&trie);
 				break;
+			case 'w'://no texto é o "p" 
+			
+			break;
 			case 'e':
 				break;
 		}
