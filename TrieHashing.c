@@ -567,6 +567,41 @@ void RemoveWord(ABB** root){
 }
 //----------------------------------------------------------------------
 
+void saveTrie(ABB* trie){
+	int i=0;
+	ABB ** array = (ABB **)malloc(sizeof(ABB));
+	array[0] = trie;
+	int n = 1;
+	while(i<n){
+		if(array[i]->left != NULL){
+			n++;
+			array = (ABB **)realloc(array, n*sizeof(ABB));
+			array[n-1] = array[i]->left;
+		}
+		if(array[i]->right != NULL){
+			n++;
+			array = (ABB **)realloc(array, n*sizeof(ABB));
+			array[n-1] = array[i]->right;
+		}
+		i++;
+	}
+	int j;
+	FILE * file;
+	file = fopen("trie","wb");
+	if(!file){
+		printf("Erro ao criar o arquivo\n");
+		exit(1);
+	}
+	for(j=0;j<n;j++){
+		//~ if(fwrite(&array[j]->letter,sizeof(char),1,f)!=1){
+			//~ printf("Erro ao escrever %c no arquivo\n",array[j]->letter);
+			//~ exit(1);
+		//~ }
+		printf("%c\n",array[j]->letter);
+	}
+	fclose(file);
+}
+
 int main(){
 	ABB* trie = NULL;
 	char choice;
@@ -600,6 +635,9 @@ int main(){
 			case 'w'://no texto é o "p" 
 			
 			break;
+			case 's':
+				saveTrie(trie);
+				break;
 			case 'e':
 				break;
 		}
